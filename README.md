@@ -11,6 +11,9 @@ eg.
     mapping.put("country", "USA");
     String result = TemplateEngine.substitute("Hello ${city}, ${state} in ${country}!", mapping);
 
+    --> Hello Boulder, Colorado in USA!
+
+
 Escaping of expressions can be achieved by backslash-escaping the dollar sign:
 
 eg.
@@ -18,6 +21,8 @@ eg.
     Map<String, String> mapping = Maps.newHashMap();
     mapping.put("varName", "x");
     String result = TemplateEngine.substitute("Expression is: \\${${varName}}", mapping);
+
+    --> Expression is: ${x}
 
 See com.github.fullduplex.TemplateEngineExamples and com.github.fullduplex.TemplateEngineTest for more examples.
 
