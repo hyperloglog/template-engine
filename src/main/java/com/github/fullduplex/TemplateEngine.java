@@ -4,15 +4,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Author: Rob Martin
  * Created: 2/21/13 8:05 PM
  */
 public class TemplateEngine {
-
-    private static final Pattern VALID_EXPRESSION_PATTERN = Pattern.compile("[A-Za-z_]{1}(\\w+)?");
 
     // expressions are represented with a dollar sign and wrapping braces, eg. ${foo}
     private static final char CHAR_ESCAPE = '\\';
@@ -45,19 +42,21 @@ public class TemplateEngine {
 
             // output escaped character
             if (c == CHAR_ESCAPE) {
-                // consume next character as well
-                if (stream.hasNext())
-                    output.append(stream.next());
+                // consume/output next character, unless it's a newline
+                if (stream.hasNext()) {
+                    // todo: fix newline issue
+                }
             } else if (c == CHAR_INIT) {
                 // expression beginning?
                 if (stream.hasNext()) {
                     char nextChar = stream.next();
                     if (nextChar == CHAR_OPEN) {
                         output.append(evaluateExpression(stream, mapping));
-                        continue;
+                    } else {
+                        // false alarm - expression not opened
+                        output.append(c).append(nextChar);
                     }
                 }
-                output.append(c);
             } else {
                 output.append(c);
             }
@@ -68,8 +67,7 @@ public class TemplateEngine {
 
     /**
      * Evaluate a template expression. Expressions are assumed to following the same restrictions as java variable
-     * names (with the exception of dollar-signs, which are not allowed). Expressions are expected to be available in
-     * the mapping.
+     * names. Expressions must have matching keys in the mapping.
      *
      * @param stream
      * @param mapping
@@ -79,23 +77,34 @@ public class TemplateEngine {
      * @throws TemplateParseException if the expression is
      */
     protected static String evaluateExpression(CharacterStream stream, Map<String, String> mapping) {
-        if (!stream.hasNext()) {
+        if (!stream.hasNext())
             throw new TemplateParseException("Empty expression at position " + stream.currIndex());
-        }
 
         StringBuilder expression = new StringBuilder();
-        boolean closed = false;
+
+        // first character is special
         char c = stream.next();
+        if (!Character.isJavaIdentifierStart(c))
+            throw new TemplateParseException("Invalid start character for variable: " + c);
         expression.append(c);
 
+        boolean closed = false; // the expression has been closed
+
+        // consume characters from stream, stopping if/when we encounter the close character
         while (stream.hasNext() && c != CHAR_CLOSE) {
             c = stream.next();
-            if (c == CHAR_CLOSE)
+
+            if (c == CHAR_CLOSE) {
+                // set close flag, and toss the character away
                 closed = true;
-            else
+            } else {
+                if (!Character.isJavaIdentifierPart(c))
+                    throw new TemplateParseException("Invalid start character for variable: " + c);
                 expression.append(c);
+            }
         }
 
+        // ensure we found the close character
         if (!closed)
             throw new TemplateParseException("Expected expression close at position " + stream.currIndex());
 

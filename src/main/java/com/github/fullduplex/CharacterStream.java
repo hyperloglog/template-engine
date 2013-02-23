@@ -29,6 +29,13 @@ public class CharacterStream {
         return string.charAt(currIndex++);
     }
 
+    public char peek() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return string.charAt(currIndex + 1);
+    }
+
     public int currIndex() {
         return currIndex;
     }

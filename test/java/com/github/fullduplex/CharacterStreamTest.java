@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 /**
  * Author: Rob Martin
  * Created: 2/21/13 10:08 PM
@@ -24,6 +27,19 @@ public class CharacterStreamTest {
         cs.next(); // 1
         cs.next(); // 2
         cs.next(); // boom!
+    }
+
+    @Test
+    public void testSimpleUsage() {
+        int count = 0;
+        String s = "12345";
+        CharacterStream cs = new CharacterStream(s);
+        while (cs.hasNext()) {
+            cs.next();
+            count++;
+        }
+        assertEquals(s.length(), count);
+        assertFalse(cs.hasNext());
     }
 
 }
