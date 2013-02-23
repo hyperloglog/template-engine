@@ -43,9 +43,28 @@ public class TemplateEngineExamples {
         System.out.println("Result: " + substitute(template, varNames) );
     }
 
+    public void foo() {
+        Map<String, String> mapping = Maps.newHashMap();
+        mapping.put("city", "Boulder");
+        mapping.put("state", "Colorado");
+        mapping.put("country", "USA");
+        String result = TemplateEngine.substitute("Hello ${city}, ${state} in ${country}!", mapping);
+        System.out.println(result);
+    }
+
+    public void foo2() {
+        Map<String, String> mapping = Maps.newHashMap();
+        mapping.put("varName", "x");
+        String result = TemplateEngine.substitute("Expression is: \\${${varName}}", mapping);
+        System.out.println(result);
+
+    }
+
     public static void main(String[] args) {
         TemplateEngineExamples examples = new TemplateEngineExamples();
-        examples.simpleExample();
-        examples.escapingExample();
+//        examples.simpleExample();
+//        examples.escapingExample();
+        examples.foo();
+        examples.foo2();
     }
 }
