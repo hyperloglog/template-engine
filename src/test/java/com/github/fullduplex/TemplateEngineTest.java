@@ -58,7 +58,7 @@ public class TemplateEngineTest {
 
     @Test
     public void testEscapedSubstitution() throws Exception {
-        assertEquals("expr = ${'num'}", TemplateEngine.substitute("expr = \\${'num'}", mapping));
+        assertEquals("city = ${Boulder}", TemplateEngine.substitute("city = \\${${city}}", mapping));
     }
 
     @Test(expected = UnknownMappingException.class)
