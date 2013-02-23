@@ -41,6 +41,11 @@ public class TemplateEngineTest {
     }
 
     @Test
+    public void testSubstitutionWithBackslash() {
+        assertEquals("This is a backslash: \\", TemplateEngine.substitute("This is a backslash: \\", emptyMapping));
+    }
+
+    @Test
     public void testMultipleSubstitutions() {
         assertEquals("Hello Boulder, Colorado in USA!",
                      TemplateEngine.substitute("Hello ${city}, ${state} in ${country}!", mapping));
@@ -53,7 +58,7 @@ public class TemplateEngineTest {
 
     @Test
     public void testEscapedSubstitution() throws Exception {
-        assertEquals("map = ${'a' -> '1'}", TemplateEngine.substitute("map = \\${'a' -> '1'}", mapping));
+        assertEquals("expr = ${'num'}", TemplateEngine.substitute("expr = \\${'num'}", mapping));
     }
 
     @Test(expected = UnknownMappingException.class)

@@ -42,12 +42,14 @@ public class TemplateEngine {
 
             // output escaped character
             if (c == CHAR_ESCAPE) {
-                // consume/output next character, unless it's a newline
-                if (stream.hasNext()) {
-                    // todo: fix newline issue
+                // handle escaped expression - prevent expression start by consuming init char
+                if (stream.hasNext() && stream.peek() == CHAR_INIT) {
+                    output.append(stream.next());
+                } else {
+                    output.append(c);
                 }
             } else if (c == CHAR_INIT) {
-                // expression beginning?
+                // expression start?
                 if (stream.hasNext()) {
                     char nextChar = stream.next();
                     if (nextChar == CHAR_OPEN) {

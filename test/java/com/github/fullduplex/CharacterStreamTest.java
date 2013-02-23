@@ -29,6 +29,17 @@ public class CharacterStreamTest {
         cs.next(); // boom!
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testPeek() {
+        CharacterStream cs = new CharacterStream("abc");
+        assertEquals('a', cs.peek());
+        assertEquals('a', cs.next());
+        assertEquals('b', cs.peek());
+        assertEquals('b', cs.next());
+        assertEquals('c', cs.next());
+        cs.peek();
+    }
+
     @Test
     public void testSimpleUsage() {
         int count = 0;

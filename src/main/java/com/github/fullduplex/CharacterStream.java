@@ -33,7 +33,7 @@ public class CharacterStream {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return string.charAt(currIndex + 1);
+        return string.charAt(currIndex);
     }
 
     public int currIndex() {
